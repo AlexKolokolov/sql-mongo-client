@@ -23,6 +23,8 @@ repositories {
 }
 
 dependencies {
-  testCompile('junit:junit:4.12')
-  compile("org.springframework.boot:spring-boot-starter")
+  compile "org.springframework.boot:spring-boot-starter"
+  testCompile "junit:junit:4.12"
+  testCompile "org.assertj:assertj-core"
+  testCompile "org.springframework.boot:spring-boot-starter-test"
 }
