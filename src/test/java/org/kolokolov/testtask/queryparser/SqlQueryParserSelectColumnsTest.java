@@ -1,4 +1,4 @@
-package org.kolokolov.testtask.querybuilder;
+package org.kolokolov.testtask.queryparser;
 
 import net.sf.jsqlparser.statement.select.Select;
 import org.junit.ClassRule;
@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.kolokolov.testtask.Application;
-import org.kolokolov.testtask.parser.SqlQueryParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.rules.SpringClassRule;

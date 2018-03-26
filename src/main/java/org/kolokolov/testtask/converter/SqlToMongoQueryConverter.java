@@ -7,7 +7,7 @@ import com.mongodb.client.MongoDatabase;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.Select;
 import org.bson.Document;
-import org.kolokolov.testtask.parser.SqlQueryParser;
+import org.kolokolov.testtask.queryparser.SqlQueryParser;
 import org.kolokolov.testtask.querybuilder.MongoQueryBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,14 +23,14 @@ public class SqlToMongoQueryConverter {
     private final MongoQueryBuilder builder;
     private final PrintStream printStream;
 
-//    @Value("$mongo.host:localhost")
-    private String host = "localhost";
+    @Value("${mongo.host:localhost}")
+    private String host;
 
-//    @Value("$mongo.host:27017")
-    private Integer port = 27017;
+    @Value("${mongo.port:27017}")
+    private Integer port;
 
-//    @Value("$mongo.database:testdb")
-    private String databaseName = "testdb";
+    @Value("${mongo.database:testdb}")
+    private String databaseName;
 
     public SqlToMongoQueryConverter(SqlQueryParser queryParser, MongoQueryBuilder builder, PrintStream printStream) {
         this.queryParser = queryParser;

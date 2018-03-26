@@ -13,8 +13,8 @@ public class InputProcessor {
 
     private static final String PROMPT = "> ";
 
-//    @Value("${app.exit-command:exit}")
-    private String exitCommand = "exit";
+    @Value("${app.exit-command: exit}")
+    private String exitCommand;
 
     private final PrintStream printStream;
 

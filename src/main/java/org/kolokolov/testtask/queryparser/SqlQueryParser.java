@@ -1,4 +1,4 @@
-package org.kolokolov.testtask.parser;
+package org.kolokolov.testtask.queryparser;
 
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Expression;
@@ -40,7 +40,7 @@ public class SqlQueryParser {
         return tablesNamesFinder.getTableList(selectQuery);
     }
 
-    public List<SelectItem> getSelectItems(Select selectQuery) {
+    private List<SelectItem> getSelectItems(Select selectQuery) {
         PlainSelect plainSelect = fetchPlainSelectFromSelect(selectQuery);
         return plainSelect.getSelectItems();
     }

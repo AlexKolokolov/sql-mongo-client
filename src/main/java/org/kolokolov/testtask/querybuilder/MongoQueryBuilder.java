@@ -13,7 +13,7 @@ import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
 import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.kolokolov.testtask.parser.SqlQueryParser;
+import org.kolokolov.testtask.queryparser.SqlQueryParser;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
