@@ -13,8 +13,8 @@ public class InputProcessor {
 
     private static final String PROMPT = "> ";
 
-    @Value("${app.exit-command:exit}")
-    private String exitCommand;
+//    @Value("${app.exit-command:exit}")
+    private String exitCommand = "exit";
 
     private final PrintStream printStream;
 
@@ -29,7 +29,11 @@ public class InputProcessor {
         String line = promptNextLine();
         while (!exitCommand.equalsIgnoreCase(line)) {
             if (!line.isEmpty()) {
-                processLine.accept(line);
+                try {
+                    processLine.accept(line);
+                } catch (RuntimeException e) {
+                    printStream.println(e.getMessage());
+                }
             }
             line = promptNextLine();
         }
