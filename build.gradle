@@ -32,6 +32,8 @@ dependencies {
   compile "org.springframework.boot:spring-boot-starter"
   compile "org.mongodb:mongo-java-driver:3.6.3"
   compile "com.github.jsqlparser:jsqlparser:0.9"
+  compile "org.jline:jline-terminal:3.5.1"
+  compile "org.jline:jline-reader:3.5.1"
   testCompile "junit:junit:4.12"
   testCompile "org.assertj:assertj-core"
   testCompile "org.springframework.boot:spring-boot-starter-test"

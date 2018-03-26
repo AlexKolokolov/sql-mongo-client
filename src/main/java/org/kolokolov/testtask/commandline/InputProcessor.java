@@ -1,11 +1,11 @@
 package org.kolokolov.testtask.commandline;
 
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Scanner;
 import java.util.function.Consumer;
 
 @Service
@@ -17,13 +17,13 @@ public class InputProcessor {
     @Value("${app.exit-command: exit}")
     private String exitCommand;
 
-    private final PrintStream printStream;
+    private final Terminal terminal;
 
-    private final Scanner scanner;
+    private final LineReader lineReader;
 
-    public InputProcessor(InputStream inputStream, PrintStream printStream) {
-        this.scanner = new Scanner(inputStream);
-        this.printStream = printStream;
+    public InputProcessor(Terminal terminal) {
+        this.terminal = terminal;
+        this.lineReader = LineReaderBuilder.builder().terminal(terminal).build();
     }
 
     public void processInput(Consumer<String> processLine) {
@@ -33,16 +33,15 @@ public class InputProcessor {
                 try {
                     processLine.accept(line);
                 } catch (RuntimeException e) {
-                    printStream.println(e.getMessage());
+                    terminal.writer().println(e.getMessage());
                 }
             }
             line = promptNextLine();
         }
-        printStream.println(EXIT_MSG);
+        terminal.writer().println(EXIT_MSG);
     }
 
     private String promptNextLine() {
-        printStream.print(PROMPT);
-        return scanner.nextLine();
+        return lineReader.readLine(PROMPT);
     }
 }

@@ -1,23 +1,25 @@
 package org.kolokolov.testtask.config;
 
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @Configuration
 @EnableAsync
 public class ApplicationConfig {
 
     @Bean
-    public InputStream stdIn() {
-        return System.in;
+    public PrintWriter stdOut() throws IOException {
+        return terminal().writer();
     }
 
     @Bean
-    public PrintStream stdOut() {
-        return System.out;
+    public Terminal terminal() throws IOException {
+        return TerminalBuilder.builder().system(true).build();
     }
 }

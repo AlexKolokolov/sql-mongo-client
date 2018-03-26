@@ -12,7 +12,7 @@ import org.kolokolov.testtask.querybuilder.MongoQueryBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class SqlToMongoQueryConverter {
 
     private final SqlQueryParser queryParser;
     private final MongoQueryBuilder builder;
-    private final PrintStream printStream;
+    private final PrintWriter writer;
 
     @Value("${mongo.host:localhost}")
     private String host;
@@ -32,10 +32,10 @@ public class SqlToMongoQueryConverter {
     @Value("${mongo.database:testdb}")
     private String databaseName;
 
-    public SqlToMongoQueryConverter(SqlQueryParser queryParser, MongoQueryBuilder builder, PrintStream printStream) {
+    public SqlToMongoQueryConverter(SqlQueryParser queryParser, MongoQueryBuilder builder, PrintWriter writer) {
         this.queryParser = queryParser;
         this.builder = builder;
-        this.printStream = printStream;
+        this.writer = writer;
     }
 
     public void convertQueryAndRun(String sqlQuery) {
@@ -52,7 +52,7 @@ public class SqlToMongoQueryConverter {
             Expression whereExpression = queryParser.getWhereExpression(select);
             builder.addFilter(mongoQuery, whereExpression);
             ArrayList<Document> result = mongoQuery.into(new ArrayList<>());
-            result.forEach(printStream::println);
+            result.forEach(writer::println);
         }
     }
 
