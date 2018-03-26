@@ -20,15 +20,8 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-task fatJar(type: Jar) {
-  manifest {
-    attributes 'Implementation-Title': 'jar with dependencies',
-            'Implementation-Version': version,
-            'Main-Class': 'org.kolokolov.testtask.Application'
-  }
-  version = ""
-  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-  with jar
+bootJar {
+  archiveName = "${project.name}.jar"
 }
 
 repositories {

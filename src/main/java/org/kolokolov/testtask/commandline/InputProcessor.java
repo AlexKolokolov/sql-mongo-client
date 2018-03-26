@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 public class InputProcessor {
 
     private static final String PROMPT = "> ";
+    private static final String EXIT_MSG = "bye";
 
     @Value("${app.exit-command: exit}")
     private String exitCommand;
@@ -37,6 +38,7 @@ public class InputProcessor {
             }
             line = promptNextLine();
         }
+        printStream.println(EXIT_MSG);
     }
 
     private String promptNextLine() {
