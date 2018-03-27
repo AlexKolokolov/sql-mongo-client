@@ -27,6 +27,6 @@ public class ApplicationConfig {
 
     @Bean
     public Terminal terminal() throws IOException {
-        return TerminalBuilder.builder().system(true).build();
+        return TerminalBuilder.terminal();
     }
 }
