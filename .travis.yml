@@ -8,4 +8,4 @@ cache:
   - $HOME/.m2
 
 script:
-  - ./gradlw build
+  - ./gradlew build
