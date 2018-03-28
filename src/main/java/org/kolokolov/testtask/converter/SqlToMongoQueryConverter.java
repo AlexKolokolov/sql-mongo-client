@@ -4,9 +4,6 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.statement.select.Limit;
-import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.Select;
 import org.bson.Document;
 import org.kolokolov.testtask.queryparser.SqlQueryParser;
@@ -46,20 +43,19 @@ public class SqlToMongoQueryConverter {
         Select select = queryParser.parseSqlQuery(sqlQuery);
         List<String> tables = queryParser.getTableNames(select);
 
-        for (String table: tables) {
-            MongoCollection<Document> collection = database.getCollection(table);
-            FindIterable<Document> mongoQuery = collection.find();
-            List<String> fields = queryParser.getFieldsList(select);
-            builder.addProjection(mongoQuery, fields);
-            Expression whereExpression = queryParser.getWhereExpression(select);
-            builder.addFilter(mongoQuery, whereExpression);
-            Limit limit = queryParser.getLimit(select);
-            builder.addLimit(mongoQuery, limit);
-            List<OrderByElement> orderByElements = queryParser.getOrderByElements(select);
-            builder.addSort(mongoQuery, orderByElements);
-            ArrayList<Document> result = mongoQuery.into(new ArrayList<>());
-            result.forEach(output::println);
+        for (String tableNames: tables) {
+            MongoCollection<Document> collection = database.getCollection(tableNames);
+            FindIterable<Document> mongoQuery = buildMongoQuery(collection, select);
+            mongoQuery.into(new ArrayList<>()).forEach(output::println);
         }
     }
 
+    private FindIterable<Document> buildMongoQuery(MongoCollection<Document> collection, Select selectParameters) {
+        FindIterable<Document> mongoQuery = collection.find();
+        builder.addProjection(mongoQuery, queryParser.getFieldsList(selectParameters));
+        builder.addFilter(mongoQuery, queryParser.getWhereExpression(selectParameters));
+        builder.addLimit(mongoQuery, queryParser.getLimit(selectParameters));
+        builder.addSort(mongoQuery, queryParser.getOrderByElements(selectParameters));
+        return mongoQuery;
+    }
 }
