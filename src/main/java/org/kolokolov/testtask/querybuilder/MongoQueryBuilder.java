@@ -3,6 +3,7 @@ package org.kolokolov.testtask.querybuilder;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
@@ -13,15 +14,12 @@ import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
 import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.kolokolov.testtask.queryparser.SqlQueryParser;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class MongoQueryBuilder {
-
-    private SqlQueryParser sqlQueryParser;
 
     public void addFilter(FindIterable<Document> query, Expression expression) {
         if (expression != null) {
@@ -58,27 +56,35 @@ public class MongoQueryBuilder {
     }
 
     private Bson createEqualsToFilter(EqualsTo expression) {
-        return Filters.eq(expression.getLeftExpression().toString(), expression.getRightExpression().toString());
+        return Filters.eq(expression.getLeftExpression().toString(), toString(expression.getRightExpression()));
     }
 
     private Bson createNotEqualsToFilter(NotEqualsTo expression) {
-        return Filters.ne(expression.getLeftExpression().toString(), expression.getRightExpression().toString());
+        return Filters.ne(expression.getLeftExpression().toString(), toString(expression.getRightExpression()));
     }
 
     private Bson createGreaterThanFilter(GreaterThan expression) {
-        return Filters.gt(expression.getLeftExpression().toString(), expression.getRightExpression().toString());
+        return Filters.gt(expression.getLeftExpression().toString(), toString(expression.getRightExpression()));
     }
 
     private Bson createGreaterThanEqualsFilter(GreaterThanEquals expression) {
-        return Filters.gte(expression.getLeftExpression().toString(), expression.getRightExpression().toString());
+        return Filters.gte(expression.getLeftExpression().toString(), toString(expression.getRightExpression()));
     }
 
     private Bson createLessThanFilter(MinorThan expression) {
-        return Filters.lt(expression.getLeftExpression().toString(), expression.getRightExpression().toString());
+        return Filters.lt(expression.getLeftExpression().toString(), toString(expression.getRightExpression()));
     }
 
     private Bson createLessThanEqualsFilter(MinorThanEquals expression) {
-        return Filters.lte(expression.getLeftExpression().toString(), expression.getRightExpression().toString());
+        return Filters.lte(expression.getLeftExpression().toString(), toString(expression.getRightExpression()));
+    }
+
+    private String toString(Expression expression) {
+        if (expression instanceof StringValue) {
+            return ((StringValue) expression).getValue();
+        } else {
+            return expression.toString();
+        }
     }
 
     public void addProjection(FindIterable<Document> query, List<String> selectedFields) {

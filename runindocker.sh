@@ -7,4 +7,4 @@ read -p 'MongoDB database (default testdb): ' database
 [[ -z "$port" ]] && port=27017
 [[ -z "$database" ]] && database=testdb
 
-docker run -it --net="host" alexkolokolov/sql-mongo-client --mongo.host=$host --mongo.port=$port --mongo.database=$database
+docker run -it --rm --net="host" alexkolokolov/sql-mongo-client --mongo.host=$host --mongo.port=$port --mongo.database=$database
