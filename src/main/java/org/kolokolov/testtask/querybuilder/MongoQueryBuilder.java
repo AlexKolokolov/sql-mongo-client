@@ -13,6 +13,7 @@ import net.sf.jsqlparser.expression.operators.relational.MinorThan;
 import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
 import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
 import net.sf.jsqlparser.statement.select.Limit;
+import net.sf.jsqlparser.statement.select.OrderByElement;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.stereotype.Service;
@@ -104,6 +105,14 @@ public class MongoQueryBuilder {
         if (limit != null) {
             query.limit((int) limit.getRowCount());
             query.skip((int) limit.getOffset());
+        }
+    }
+
+    public void addSort(FindIterable<Document> query, List<OrderByElement> orderByElements) {
+        if (orderByElements != null) {
+            Document sort = new Document();
+            orderByElements.forEach(e -> sort.append(e.getExpression().toString(), e.isAsc() ? 1 : -1));
+            query.sort(sort);
         }
     }
 }

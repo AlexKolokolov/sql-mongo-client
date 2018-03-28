@@ -6,6 +6,7 @@ import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.AllTableColumns;
 import net.sf.jsqlparser.statement.select.Limit;
+import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectBody;
@@ -79,5 +80,10 @@ public class SqlQueryParser {
     public Limit getLimit(Select selectQuery) {
         PlainSelect plainSelect = fetchPlainSelectFromSelect(selectQuery);
         return plainSelect.getLimit();
+    }
+
+    public List<OrderByElement> getOrderByElements(Select selectQuery) {
+        PlainSelect plainSelect = fetchPlainSelectFromSelect(selectQuery);
+        return plainSelect.getOrderByElements();
     }
 }

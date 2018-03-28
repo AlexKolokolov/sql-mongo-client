@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.Limit;
+import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.Select;
 import org.bson.Document;
 import org.kolokolov.testtask.queryparser.SqlQueryParser;
@@ -54,6 +55,8 @@ public class SqlToMongoQueryConverter {
             builder.addFilter(mongoQuery, whereExpression);
             Limit limit = queryParser.getLimit(select);
             builder.addLimit(mongoQuery, limit);
+            List<OrderByElement> orderByElements = queryParser.getOrderByElements(select);
+            builder.addSort(mongoQuery, orderByElements);
             ArrayList<Document> result = mongoQuery.into(new ArrayList<>());
             result.forEach(output::println);
         }
