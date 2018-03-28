@@ -10,9 +10,10 @@ cache:
   directories:
   - $HOME/.m2
 
+if: brahch = develop
+
 script:
-  if: brahch = develop
-    - ./gradlew build
-    - docker build -t $DOCKER_USERNAME/sql-mongo-client:latest .
-    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-    - docker push $DOCKER_USERNAME/sql-mongo-client:latest
+  - ./gradlew build
+  - docker build -t $DOCKER_USERNAME/sql-mongo-client:latest .
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - docker push $DOCKER_USERNAME/sql-mongo-client:latest
