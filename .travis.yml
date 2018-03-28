@@ -12,3 +12,6 @@ cache:
 
 script:
   - ./gradlew build
+  - docker build -t $DOCKER_USERNAME/sql-mongo-client:latest .
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - docker push $DOCKER_USERNAME/sql-mongo-client:latest
