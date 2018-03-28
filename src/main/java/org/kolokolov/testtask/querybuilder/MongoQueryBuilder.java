@@ -12,6 +12,7 @@ import net.sf.jsqlparser.expression.operators.relational.GreaterThanEquals;
 import net.sf.jsqlparser.expression.operators.relational.MinorThan;
 import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
 import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
+import net.sf.jsqlparser.statement.select.Limit;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.stereotype.Service;
@@ -97,5 +98,12 @@ public class MongoQueryBuilder {
         Document fieldFilter = new Document("_id", false);
         fields.forEach(field -> fieldFilter.append(field, true));
         return fieldFilter;
+    }
+
+    public void addLimit(FindIterable<Document> query, Limit limit) {
+        if (limit != null) {
+            query.limit((int) limit.getRowCount());
+            query.skip((int) limit.getOffset());
+        }
     }
 }

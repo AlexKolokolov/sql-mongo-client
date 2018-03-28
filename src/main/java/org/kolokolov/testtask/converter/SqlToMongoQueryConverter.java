@@ -5,6 +5,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.statement.select.Limit;
 import net.sf.jsqlparser.statement.select.Select;
 import org.bson.Document;
 import org.kolokolov.testtask.queryparser.SqlQueryParser;
@@ -51,6 +52,8 @@ public class SqlToMongoQueryConverter {
             builder.addProjection(mongoQuery, fields);
             Expression whereExpression = queryParser.getWhereExpression(select);
             builder.addFilter(mongoQuery, whereExpression);
+            Limit limit = queryParser.getLimit(select);
+            builder.addLimit(mongoQuery, limit);
             ArrayList<Document> result = mongoQuery.into(new ArrayList<>());
             result.forEach(output::println);
         }
