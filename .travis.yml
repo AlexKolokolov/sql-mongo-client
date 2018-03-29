@@ -5,6 +5,7 @@ jdk:
 
 services:
   - docker
+  - mongodb
 
 cache:
   directories:
