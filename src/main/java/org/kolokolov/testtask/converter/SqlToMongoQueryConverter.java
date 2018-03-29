@@ -38,11 +38,11 @@ public class SqlToMongoQueryConverter {
     }
 
     public void convertQueryAndRun(String sqlQuery) {
-        List<FindIterable<Document>> queries = prepareQuries(sqlQuery);
+        List<FindIterable<Document>> queries = prepareQueries(sqlQuery);
         runQueriesAndPrintResult(queries);
     }
 
-    List<FindIterable<Document>> prepareQuries(String sqlQuery) {
+    private List<FindIterable<Document>> prepareQueries(String sqlQuery) {
         MongoClient client = new MongoClient(host, port);
         MongoDatabase database = client.getDatabase(databaseName);
         Select select = queryParser.parseSqlQuery(sqlQuery);
