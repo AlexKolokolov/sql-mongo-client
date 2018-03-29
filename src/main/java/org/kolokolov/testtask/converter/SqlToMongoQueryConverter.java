@@ -38,16 +38,27 @@ public class SqlToMongoQueryConverter {
     }
 
     public void convertQueryAndRun(String sqlQuery) {
+        List<FindIterable<Document>> queries = prepareQuries(sqlQuery);
+        runQueriesAndPrintResult(queries);
+    }
+
+    List<FindIterable<Document>> prepareQuries(String sqlQuery) {
         MongoClient client = new MongoClient(host, port);
         MongoDatabase database = client.getDatabase(databaseName);
         Select select = queryParser.parseSqlQuery(sqlQuery);
         List<String> tables = queryParser.getTableNames(select);
-
+        List<FindIterable<Document>> queries = new ArrayList<>();
         for (String tableNames: tables) {
             MongoCollection<Document> collection = database.getCollection(tableNames);
             FindIterable<Document> mongoQuery = buildMongoQuery(collection, select);
-            mongoQuery.into(new ArrayList<>()).forEach(output::println);
+            queries.add(mongoQuery);
         }
+        return queries;
+    }
+
+    private void runQueriesAndPrintResult(List<FindIterable<Document>> queries) {
+        queries.forEach(query ->
+                query.into(new ArrayList<>()).forEach(output::println));
     }
 
     private FindIterable<Document> buildMongoQuery(MongoCollection<Document> collection, Select selectParameters) {
