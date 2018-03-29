@@ -1,4 +1,7 @@
 #!/bin/bash
+
+docker pull alexkolokolov/sql-mongo-client
+
 read -p 'MongoDB host (default localhost): ' host
 read -p 'MongoDB port (default 27017): ' port
 read -p 'MongoDB database (default devdb): ' database
