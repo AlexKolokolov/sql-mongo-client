@@ -47,7 +47,8 @@ public class SqlQueryParserSelectColumnsTest {
                 {"SELECT * FROM x", Collections.emptyList()},
                 {"SELECT a FROM x", Collections.singletonList("a")},
                 {"SELECT a, b FROM x", Arrays.asList("a", "b")},
-                {"SELECT a, b.* FROM x", Arrays.asList("a", "b.*")},
+                {"SELECT a, b.* FROM x", Arrays.asList("a", "b")},
+                {"SELECT a, b.c FROM x", Arrays.asList("a", "b.c")},
                 {"SELECT a, b, * FROM x", Collections.emptyList()},
                 {"SELECT *, name FROM x", Collections.emptyList()}
         });

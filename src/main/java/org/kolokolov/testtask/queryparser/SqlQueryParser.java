@@ -4,13 +4,11 @@ import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.AllTableColumns;
 import net.sf.jsqlparser.statement.select.Limit;
 import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectBody;
-import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 import org.kolokolov.testtask.error.SyntaxError;
@@ -18,11 +16,16 @@ import org.kolokolov.testtask.error.UnsupportedQueryTypeException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
 public class SqlQueryParser {
+
+    private FieldNameResolver fieldNameResolver;
+
+    public SqlQueryParser(FieldNameResolver fieldNameResolver) {
+        this.fieldNameResolver = fieldNameResolver;
+    }
 
     public Select parseSqlQuery(String sqlQuery) {
         try {
@@ -65,12 +68,12 @@ public class SqlQueryParser {
         List<SelectItem> selectItems = getSelectItems(selectQuery);
         List<String> selectedFields = new ArrayList<>();
         for (SelectItem item: selectItems) {
-            if (item instanceof SelectExpressionItem) {
-                selectedFields.add(((SelectExpressionItem) item).getExpression().toString());
-            } else if (item instanceof AllTableColumns) {
-                selectedFields.add(((AllTableColumns) item).getTable().toString() + ".*");
+            item.accept(fieldNameResolver);
+            String fieldName = fieldNameResolver.getField();
+            if (fieldName != null ) {
+                selectedFields.add(fieldName);
             } else {
-                selectedFields = Collections.emptyList();
+                selectedFields.clear();
                 break;
             }
         }

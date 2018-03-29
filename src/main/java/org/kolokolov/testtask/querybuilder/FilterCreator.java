@@ -87,17 +87,17 @@ public class FilterCreator extends ExpressionVisitorAdapter {
 
     @Override
     public void visit(DateValue value) {
-        this.value = value.toString();
+        this.value = value.getValue().toString();
     }
 
     @Override
     public void visit(TimestampValue value) {
-        this.value = value.toString();
+        this.value = value.getValue().toString();
     }
 
     @Override
     public void visit(TimeValue value) {
-        this.value = value.toString();
+        this.value = value.getValue().toString();
     }
 
     @Override
