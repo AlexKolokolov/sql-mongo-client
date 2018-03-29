@@ -5,5 +5,5 @@ logging.level.root: WARN
 mongo:
   host: localhost
   port: 27017
-  database: proddb
+  database: devdb
 
