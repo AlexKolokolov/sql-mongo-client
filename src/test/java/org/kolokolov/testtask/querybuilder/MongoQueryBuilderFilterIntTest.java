@@ -50,11 +50,11 @@ public class MongoQueryBuilderFilterIntTest {
         return Arrays.asList(new Object[][] {
                 {"SELECT * FROM x WHERE a = 'b'", "Filter{fieldName='a', value=b}"},
                 {"SELECT * FROM x WHERE a > 0", "Operator Filter{fieldName='a', operator='$gt', value=0}"},
-                {"SELECT * FROM x WHERE a >= {d '2018-03-28'} OR b <> 3",
-                        "Or Filter{filters=[Operator Filter{fieldName='a', operator='$gte', value=BsonDateTime{value=1522184400000}}, "
+                {"SELECT * FROM x WHERE a >= 5 OR b <> 3",
+                        "Or Filter{filters=[Operator Filter{fieldName='a', operator='$gte', value=5}, "
                                 + "Operator Filter{fieldName='b', operator='$ne', value=3}]}"},
-                {"SELECT * FROM x WHERE a < {ts '2018-03-28 10:30:00'} AND b <> 'aaa'",
-                        "And Filter{filters=[Operator Filter{fieldName='a', operator='$lt', value=BsonDateTime{value=1522222200000}}, "
+                {"SELECT * FROM x WHERE a = 'bbb' AND b <> 'aaa'",
+                        "And Filter{filters=[Filter{fieldName='a', value=bbb}, "
                                 + "Operator Filter{fieldName='b', operator='$ne', value=aaa}]}"}
         });
     }
