@@ -18,6 +18,7 @@ import net.sf.jsqlparser.expression.operators.relational.MinorThan;
 import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
 import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
 import net.sf.jsqlparser.schema.Column;
+import org.bson.BsonDateTime;
 import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -32,7 +33,7 @@ public class FilterCreator extends ExpressionVisitorAdapter {
 
     private Bson filter;
 
-    private String value;
+    private Object value;
 
     private FilterCreator leftFilterCreator;
 
@@ -49,7 +50,7 @@ public class FilterCreator extends ExpressionVisitorAdapter {
         return filter;
     }
 
-    private String getValue() {
+    private Object getValue() {
         return value;
     }
 
@@ -87,53 +88,53 @@ public class FilterCreator extends ExpressionVisitorAdapter {
 
     @Override
     public void visit(DateValue value) {
-        this.value = value.getValue().toString();
+        this.value = new BsonDateTime(value.getValue().getTime());
     }
 
     @Override
     public void visit(TimestampValue value) {
-        this.value = value.getValue().toString();
+        this.value = new BsonDateTime(value.getValue().getTime());
     }
 
     @Override
     public void visit(TimeValue value) {
-        this.value = value.getValue().toString();
+        this.value = new BsonDateTime(value.getValue().getTime());
     }
 
     @Override
     public void visit(EqualsTo expr) {
         setFilterCreatorsToSubExpressions(expr);
-        filter = Filters.eq(leftFilterCreator.getValue(), rightFilterCreator.getValue());
+        filter = Filters.eq(leftFilterCreator.getValue().toString(), rightFilterCreator.getValue());
     }
 
     @Override
     public void visit(NotEqualsTo expr) {
         setFilterCreatorsToSubExpressions(expr);
-        filter = Filters.ne(leftFilterCreator.getValue(), rightFilterCreator.getValue());
+        filter = Filters.ne(leftFilterCreator.getValue().toString(), rightFilterCreator.getValue());
     }
 
     @Override
     public void visit(GreaterThan expr) {
         setFilterCreatorsToSubExpressions(expr);
-        filter = Filters.gt(leftFilterCreator.getValue(), rightFilterCreator.getValue());
+        filter = Filters.gt(leftFilterCreator.getValue().toString(), rightFilterCreator.getValue());
     }
 
     @Override
     public void visit(GreaterThanEquals expr) {
         setFilterCreatorsToSubExpressions(expr);
-        filter = Filters.gte(leftFilterCreator.getValue(), rightFilterCreator.getValue());
+        filter = Filters.gte(leftFilterCreator.getValue().toString(), rightFilterCreator.getValue());
     }
 
     @Override
     public void visit(MinorThan expr) {
         setFilterCreatorsToSubExpressions(expr);
-        filter = Filters.lt(leftFilterCreator.getValue(), rightFilterCreator.getValue());
+        filter = Filters.lt(leftFilterCreator.getValue().toString(), rightFilterCreator.getValue());
     }
 
     @Override
     public void visit(MinorThanEquals expr) {
         setFilterCreatorsToSubExpressions(expr);
-        filter = Filters.lte(leftFilterCreator.getValue(), rightFilterCreator.getValue());
+        filter = Filters.lte(leftFilterCreator.getValue().toString(), rightFilterCreator.getValue());
     }
 
     private void initializeSubFilterCreators() {

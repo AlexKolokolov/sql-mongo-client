@@ -11,6 +11,7 @@ import net.sf.jsqlparser.expression.operators.relational.GreaterThan;
 import net.sf.jsqlparser.expression.operators.relational.MinorThan;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
+import org.bson.BsonDateTime;
 import org.bson.conversions.Bson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,7 @@ public class MongoQueryBuilderFilterCreatorTest {
     private final static LongValue TEST_LONG_VALUE = new LongValue("0");
     private final static StringValue TEST_STRING_VALUE = new StringValue("'b'");
     private final static TimeValue TEST_TIME_VALUE = new TimeValue("'12:00:00'");
+    private final static String BSON_TIME = new BsonDateTime(TEST_TIME_VALUE.getValue().getTime()).toString();
 
     @Autowired
     private FilterCreator filterCreator;
@@ -103,7 +105,7 @@ public class MongoQueryBuilderFilterCreatorTest {
         filterCreator.visit(expression);
         Bson filter = filterCreator.getFilter();
         String expectedResult = String.format("Operator Filter{fieldName='%s', operator='$lt', value=%s}",
-                TEST_COLUMN.getColumnName(), TEST_TIME_VALUE.getValue().toString());
+                TEST_COLUMN.getColumnName(), BSON_TIME);
         assertThat(filter.toString()).isEqualTo(expectedResult);
     }
 
@@ -131,7 +133,7 @@ public class MongoQueryBuilderFilterCreatorTest {
         String expectedResult =
                 String.format("And Filter{filters=[Operator Filter{fieldName='%1$s', operator='$gt', value=%2$d}, "
                                 + "Operator Filter{fieldName='%1$s', operator='$lt', value=%3$s}]}",
-                        TEST_COLUMN.getColumnName(), TEST_LONG_VALUE.getValue(), TEST_TIME_VALUE.getValue().toString());
+                        TEST_COLUMN.getColumnName(), TEST_LONG_VALUE.getValue(), BSON_TIME);
         assertThat(filter.toString()).isEqualTo(expectedResult);
     }
 }

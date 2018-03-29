@@ -25,7 +25,7 @@ public class MongoQueryBuilder {
         }
     }
 
-    private Bson createFilter(Expression expression) {
+    Bson createFilter(Expression expression) {
         expression.accept(filterCreator);
         return filterCreator.getFilter();
     }
