@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.entry;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
-public class MongoQueryBuilderTest {
+public class MongoQueryBuilderProjectionTest {
 
     @Autowired
     private MongoQueryBuilder mongoQueryBuilder;
