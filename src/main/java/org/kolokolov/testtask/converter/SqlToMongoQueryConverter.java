@@ -28,7 +28,7 @@ public class SqlToMongoQueryConverter {
     @Value("${mongo.port:27017}")
     private Integer port;
 
-    @Value("${mongo.database:testdb}")
+    @Value("${mongo.database:proddb}")
     private String databaseName;
 
     public SqlToMongoQueryConverter(SqlQueryParser queryParser, MongoQueryBuilder builder, PrintWriter output) {
@@ -42,14 +42,14 @@ public class SqlToMongoQueryConverter {
         runQueriesAndPrintResult(queries);
     }
 
-    private List<FindIterable<Document>> prepareQueries(String sqlQuery) {
+    List<FindIterable<Document>> prepareQueries(String sqlQuery) {
         MongoClient client = new MongoClient(host, port);
         MongoDatabase database = client.getDatabase(databaseName);
         Select select = queryParser.parseSqlQuery(sqlQuery);
         List<String> tables = queryParser.getTableNames(select);
         List<FindIterable<Document>> queries = new ArrayList<>();
-        for (String tableNames: tables) {
-            MongoCollection<Document> collection = database.getCollection(tableNames);
+        for (String tableName: tables) {
+            MongoCollection<Document> collection = database.getCollection(tableName);
             FindIterable<Document> mongoQuery = buildMongoQuery(collection, select);
             queries.add(mongoQuery);
         }
