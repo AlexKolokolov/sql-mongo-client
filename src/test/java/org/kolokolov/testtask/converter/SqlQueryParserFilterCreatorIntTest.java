@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.kolokolov.testtask.Application;
-import org.kolokolov.testtask.querybuilder.MongoQueryBuilder;
 import org.kolokolov.testtask.queryparser.SqlQueryParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 @SpringBootTest(classes = Application.class)
-public class MongoQueryBuilderFilterIntTest {
+public class SqlQueryParserFilterCreatorIntTest {
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -40,12 +39,9 @@ public class MongoQueryBuilderFilterIntTest {
     private SqlQueryParser sqlQueryParser;
 
     @Autowired
-    private MongoQueryBuilder mongoQueryBuilder;
-
-    @Autowired
     private SqlToMongoQueryConverter converter;
 
-    public MongoQueryBuilderFilterIntTest(String sqlQuery, String filterToString) {
+    public SqlQueryParserFilterCreatorIntTest(String sqlQuery, String filterToString) {
         this.sqlQuery = sqlQuery;
         this.filterToString = filterToString;
     }
