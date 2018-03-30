@@ -39,6 +39,6 @@ public class SqlQueryParserOrderByTest {
     public void testNoOrderBy() {
         String sqlQuery = "SELECT * FROM x";
         Select select = sqlQueryParser.parseSqlQuery(sqlQuery);
-        assertThat(sqlQueryParser.getOrderByElements(select)).isNull();
+        assertThat(sqlQueryParser.getOrderByElements(select)).isEmpty();
     }
 }

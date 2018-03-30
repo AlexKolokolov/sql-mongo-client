@@ -1,4 +1,4 @@
-package org.kolokolov.testtask.querybuilder;
+package org.kolokolov.testtask.converter;
 
 import com.mongodb.client.model.Filters;
 import net.sf.jsqlparser.expression.BinaryExpression;

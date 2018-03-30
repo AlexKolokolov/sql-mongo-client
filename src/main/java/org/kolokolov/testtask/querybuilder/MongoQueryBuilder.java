@@ -1,9 +1,6 @@
 package org.kolokolov.testtask.querybuilder;
 
 import com.mongodb.client.FindIterable;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.statement.select.Limit;
-import net.sf.jsqlparser.statement.select.OrderByElement;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.stereotype.Service;
@@ -13,21 +10,10 @@ import java.util.List;
 @Service
 public class MongoQueryBuilder {
 
-    private final FilterCreator filterCreator;
-
-    public MongoQueryBuilder(FilterCreator filterCreator) {
-        this.filterCreator = filterCreator;
-    }
-
-    public void addFilter(FindIterable<Document> query, Expression expression) {
-        if (expression != null) {
-            query.filter(createFilter(expression));
+    public void addFilter(FindIterable<Document> query, Bson filter) {
+        if (filter != null) {
+            query.filter(filter);
         }
-    }
-
-    Bson createFilter(Expression expression) {
-        expression.accept(filterCreator);
-        return filterCreator.getFilter();
     }
 
     public void addProjection(FindIterable<Document> query, List<String> selectedFields) {
@@ -42,17 +28,15 @@ public class MongoQueryBuilder {
         return fieldFilter;
     }
 
-    public void addLimit(FindIterable<Document> query, Limit limit) {
-        if (limit != null) {
-            query.limit((int) limit.getRowCount());
-            query.skip((int) limit.getOffset());
-        }
+    public void addLimit(FindIterable<Document> query, int limit, int skip) {
+            query.limit(limit);
+            query.skip(skip);
     }
 
-    public void addSort(FindIterable<Document> query, List<OrderByElement> orderByElements) {
-        if (orderByElements != null) {
+    public void addSort(FindIterable<Document> query, List<SortRule> sortRules) {
+        if (sortRules != null && !sortRules.isEmpty()) {
             Document sort = new Document();
-            orderByElements.forEach(e -> sort.append(e.getExpression().toString(), e.isAsc() ? 1 : -1));
+            sortRules.forEach(r -> sort.append(r.getField(), r.ascend()));
             query.sort(sort);
         }
     }

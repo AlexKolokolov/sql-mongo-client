@@ -16,7 +16,9 @@ import org.kolokolov.testtask.error.UnsupportedQueryTypeException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SqlQueryParser {
@@ -50,9 +52,9 @@ public class SqlQueryParser {
         return plainSelect.getSelectItems();
     }
 
-    public Expression getWhereExpression(Select selectQuery) {
+    public Optional<Expression> getWhereExpression(Select selectQuery) {
         PlainSelect plainSelect = fetchPlainSelectFromSelect(selectQuery);
-        return plainSelect.getWhere();
+        return Optional.ofNullable(plainSelect.getWhere());
     }
 
     private PlainSelect fetchPlainSelectFromSelect(Select selectQuery) {
@@ -80,13 +82,13 @@ public class SqlQueryParser {
         return selectedFields;
     }
 
-    public Limit getLimit(Select selectQuery) {
+    public Optional<Limit> getLimit(Select selectQuery) {
         PlainSelect plainSelect = fetchPlainSelectFromSelect(selectQuery);
-        return plainSelect.getLimit();
+        return Optional.ofNullable(plainSelect.getLimit());
     }
 
     public List<OrderByElement> getOrderByElements(Select selectQuery) {
         PlainSelect plainSelect = fetchPlainSelectFromSelect(selectQuery);
-        return plainSelect.getOrderByElements();
+        return plainSelect.getOrderByElements() != null ? plainSelect.getOrderByElements() : Collections.emptyList();
     }
 }

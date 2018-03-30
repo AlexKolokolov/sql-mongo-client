@@ -1,4 +1,4 @@
-package org.kolokolov.testtask.querybuilder;
+package org.kolokolov.testtask.converter;
 
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
-public class MongoQueryBuilderFilterCreatorTest {
+public class MongoFilterCreatorTest {
 
     private final static Column TEST_COLUMN = new Column(new Table("t"), "a");
     private final static LongValue TEST_LONG_VALUE = new LongValue("0");

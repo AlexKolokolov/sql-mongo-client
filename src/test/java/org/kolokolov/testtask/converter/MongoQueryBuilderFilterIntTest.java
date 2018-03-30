@@ -1,4 +1,4 @@
-package org.kolokolov.testtask.querybuilder;
+package org.kolokolov.testtask.converter;
 
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.Select;
@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.kolokolov.testtask.Application;
+import org.kolokolov.testtask.querybuilder.MongoQueryBuilder;
 import org.kolokolov.testtask.queryparser.SqlQueryParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,6 +42,9 @@ public class MongoQueryBuilderFilterIntTest {
     @Autowired
     private MongoQueryBuilder mongoQueryBuilder;
 
+    @Autowired
+    private SqlToMongoQueryConverter converter;
+
     public MongoQueryBuilderFilterIntTest(String sqlQuery, String filterToString) {
         this.sqlQuery = sqlQuery;
         this.filterToString = filterToString;
@@ -62,8 +67,8 @@ public class MongoQueryBuilderFilterIntTest {
     @Test
     public void selectedFieldsTest() {
         Select select = sqlQueryParser.parseSqlQuery(sqlQuery);
-        Expression whereExpression = sqlQueryParser.getWhereExpression(select);
-        Bson filter = mongoQueryBuilder.createFilter(whereExpression);
-        assertThat(filter.toString()).isEqualTo(filterToString);
+        Expression whereExpression = sqlQueryParser.getWhereExpression(select).get();
+        Optional<Bson> filter = converter.createFilter(whereExpression);
+        assertThat(filter.get().toString()).isEqualTo(filterToString);
     }
 }
