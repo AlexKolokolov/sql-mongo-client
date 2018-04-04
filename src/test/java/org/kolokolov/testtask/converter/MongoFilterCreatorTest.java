@@ -21,10 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -39,49 +35,30 @@ public class MongoFilterCreatorTest {
     @Autowired
     private FilterCreator filterCreator;
 
-    private EqualsTo createMockEqualsToStringExpression() {
-        EqualsTo expression = mock(EqualsTo.class);
-        when(expression.getLeftExpression()).thenReturn(TEST_COLUMN);
-        when(expression.getRightExpression()).thenReturn(TEST_STRING_VALUE);
-        doCallRealMethod().when(expression).accept(any());
+    private EqualsTo createEqualsToStringExpression() {
+        EqualsTo expression = new EqualsTo();
+        expression.setLeftExpression(TEST_COLUMN);
+        expression.setRightExpression(TEST_STRING_VALUE);
         return expression;
     }
 
-    private GreaterThan createMockGreaterThanLongExpression() {
-        GreaterThan expression = mock(GreaterThan.class);
-        when(expression.getLeftExpression()).thenReturn(TEST_COLUMN);
-        when(expression.getRightExpression()).thenReturn(TEST_LONG_VALUE);
-        doCallRealMethod().when(expression).accept(any());
+    private GreaterThan createGreaterThanLongExpression() {
+        GreaterThan expression = new GreaterThan();
+        expression.setLeftExpression(TEST_COLUMN);
+        expression.setRightExpression(TEST_LONG_VALUE);
         return expression;
     }
 
-    private MinorThan createMockLessThanTimeExpression() {
-        MinorThan expression = mock(MinorThan.class);
-        when(expression.getLeftExpression()).thenReturn(TEST_COLUMN);
-        when(expression.getRightExpression()).thenReturn(TEST_TIME_VALUE);
-        doCallRealMethod().when(expression).accept(any());
-        return expression;
-    }
-
-    private OrExpression createMockOrExpression(Expression left, Expression right) {
-        OrExpression expression = mock(OrExpression.class);
-        when(expression.getLeftExpression()).thenReturn(left);
-        when(expression.getRightExpression()).thenReturn(right);
-        doCallRealMethod().when(expression).accept(any());
-        return expression;
-    }
-
-    private AndExpression createMockAndExpression(Expression left, Expression right) {
-        AndExpression expression = mock(AndExpression.class);
-        when(expression.getLeftExpression()).thenReturn(left);
-        when(expression.getRightExpression()).thenReturn(right);
-        doCallRealMethod().when(expression).accept(any());
+    private MinorThan createLessThanTimeExpression() {
+        MinorThan expression = new MinorThan();
+        expression.setLeftExpression(TEST_COLUMN);
+        expression.setRightExpression(TEST_TIME_VALUE);
         return expression;
     }
 
     @Test
     public void testEqualsToFilterCreation() {
-        EqualsTo expression = createMockEqualsToStringExpression();
+        EqualsTo expression = createEqualsToStringExpression();
         filterCreator.visit(expression);
         Bson filter = filterCreator.getFilter();
         String expectedResult = String.format("Filter{fieldName='%s', value=%s}",
@@ -91,7 +68,7 @@ public class MongoFilterCreatorTest {
 
     @Test
     public void testGreaterThanFilterCreation() {
-        GreaterThan expression = createMockGreaterThanLongExpression();
+        GreaterThan expression = createGreaterThanLongExpression();
         filterCreator.visit(expression);
         Bson filter = filterCreator.getFilter();
         String expectedResult = String.format("Operator Filter{fieldName='%s', operator='$gt', value=%d}",
@@ -101,7 +78,7 @@ public class MongoFilterCreatorTest {
 
     @Test
     public void testLessThanFilterCreation() {
-        MinorThan expression = createMockLessThanTimeExpression();
+        MinorThan expression = createLessThanTimeExpression();
         filterCreator.visit(expression);
         Bson filter = filterCreator.getFilter();
         String expectedResult = String.format("Operator Filter{fieldName='%s', operator='$lt', value=%s}",
@@ -111,9 +88,9 @@ public class MongoFilterCreatorTest {
 
     @Test
     public void testOrFilterCreator() {
-        EqualsTo equalsToExpression = createMockEqualsToStringExpression();
-        GreaterThan greaterThanExpression = createMockGreaterThanLongExpression();
-        OrExpression orExpression = createMockOrExpression(equalsToExpression, greaterThanExpression);
+        EqualsTo equalsToExpression = createEqualsToStringExpression();
+        GreaterThan greaterThanExpression = createGreaterThanLongExpression();
+        OrExpression orExpression = new OrExpression(equalsToExpression, greaterThanExpression);
         filterCreator.visit(orExpression);
         Bson filter = filterCreator.getFilter();
         String expectedResult =
@@ -125,9 +102,9 @@ public class MongoFilterCreatorTest {
 
     @Test
     public void testAndFilterCreator() {
-        Expression equalsToExpression = createMockGreaterThanLongExpression();
-        Expression greaterThanExpression = createMockLessThanTimeExpression();
-        AndExpression andExpression = createMockAndExpression(equalsToExpression, greaterThanExpression);
+        Expression equalsToExpression = createGreaterThanLongExpression();
+        Expression greaterThanExpression = createLessThanTimeExpression();
+        AndExpression andExpression = new AndExpression(equalsToExpression, greaterThanExpression);
         filterCreator.visit(andExpression);
         Bson filter = filterCreator.getFilter();
         String expectedResult =
